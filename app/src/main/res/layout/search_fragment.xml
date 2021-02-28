@@ -15,7 +15,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/search_field"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Search" />
+        tools:text="Search"
+        android:textColor="@color/colorForeground"/>
 
     <EditText
         android:id="@+id/search_field"
@@ -23,6 +24,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
+        android:textColor="@color/colorForeground"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.69"
