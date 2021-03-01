@@ -46,14 +46,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun changeActivity() {
-        val i = Intent(this@MainActivity, SearchActivity::class.java)
+        val currActivity = this@MainActivity
+        val i = Intent(currActivity, SearchActivity::class.java)
         startActivity(i)
+        ActivityCompat.finishAffinity(currActivity)
     }
 
     private fun checkPermissions() {
         permissions.forEachIndexed() { i, elem ->
-            if (ContextCompat.checkSelfPermission(applicationContext, elem) != PackageManager.PERMISSION_GRANTED) {
+            val res = ContextCompat.checkSelfPermission(applicationContext, elem)
+            if (res != PackageManager.PERMISSION_GRANTED) {
                 askPermission(elem, i)
+            } else {
+                checkedPermissions += 1
             }
         }
     }

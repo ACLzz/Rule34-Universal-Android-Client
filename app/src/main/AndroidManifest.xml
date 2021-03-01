@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.r34university">
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"  />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -19,6 +20,7 @@
         </activity>
 
         <activity android:name=".SearchActivity"></activity>
+        <activity android:name=".ResultsActivity"></activity>
     </application>
 
 </manifest>
