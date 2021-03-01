@@ -2,17 +2,30 @@ package com.example.r34university
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.TextUtils
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.MultiAutoCompleteTextView.Tokenizer
 import androidx.fragment.app.Fragment
 import com.example.r34university.databinding.SearchFragmentBinding
+import kotlinx.android.synthetic.main.search_fragment.*
+
 
 class SearchFragment : Fragment() {
     private var _binding: SearchFragmentBinding? = null
     private val binding get() = _binding!!
     private lateinit var communicator: Communicator
+
+    private lateinit var tags: List<String>
+
+    init {
+        getTags()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,7 +41,9 @@ class SearchFragment : Fragment() {
         binding.searchButton.setOnClickListener {
             search()
         }
-        binding.searchField.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
+
+        val searchField = binding.searchField
+        searchField.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
             if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
                 search()
                 return@OnKeyListener true
@@ -36,6 +51,13 @@ class SearchFragment : Fragment() {
             false
         })
 
+        val tagsAdapter = ArrayAdapter(
+            activity?.applicationContext!!,
+            android.R.layout.simple_list_item_1,
+            tags
+        )
+        searchField.setAdapter(tagsAdapter)
+        searchField.setTokenizer(SpaceTokenizer())
     }
 
     fun hideKeyboard() {
@@ -50,6 +72,7 @@ class SearchFragment : Fragment() {
             if (searchRequest.isEmpty())
                 return
 
+            // starting new activity and passing search request
             val i = Intent(activity, ResultsActivity::class.java).apply {
                 putExtra("search", searchRequest)
             }
@@ -57,6 +80,19 @@ class SearchFragment : Fragment() {
             return
         }
 
+        val items = getResults(searchRequest)
+        communicator.passSearchResults(items)
+        hideKeyboard()
+    }
+
+    private fun getTags() {
+        // getting tags list from site
+        // FIXME
+        tags = listOf("dark_souls(4)", "less(1)", "girl(4)", "tits(4)")
+    }
+
+    private fun getResults(search: String) : List<ImageItem> {
+        // getting images list from server
         // FIXME
         var items = listOf<ImageItem>(
             ImageItem("https://rule34.xxx/thumbnails/3913/thumbnail_3c2496972f2a8747910d325aa0d091b0.jpg?4432376", "https://rule34.xxx/index.php?page=post&s=view&id=4432376", "https://rule34.xxx//samples/3913/sample_3c2496972f2a8747910d325aa0d091b0.jpg?4432376"),
@@ -65,16 +101,69 @@ class SearchFragment : Fragment() {
             ImageItem("https://rule34.xxx/thumbnails/3857/thumbnail_9a8ba8de77b842c8d084458c9b32ab72.jpg?4366508", "https://rule34.xxx/index.php?page=post&s=view&id=4366508", "https://rule34.xxx//samples/3857/sample_9a8ba8de77b842c8d084458c9b32ab72.jpg?4366508")
         )
 
-        if (searchRequest == "less") {
+        if (search == "less") {
             items = items.subList(0, 1)
         }
 
-        communicator.passSearchResults(items)
-        hideKeyboard()
+        return items
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+}
+
+class SpaceTokenizer : Tokenizer {
+    private val i = 0
+
+    // Returns the start of the token that ends at offset cursor within text.
+    override fun findTokenStart(inputText: CharSequence, cursor: Int): Int {
+        var idx = cursor
+        while (idx > 0 && inputText[idx - 1] != ' ') {
+            idx--
+        }
+        while (idx < cursor && inputText[idx] == ' ') {
+            idx++
+        }
+        return idx
+    }
+
+    // Returns the end of the token (minus trailing punctuation) that
+    // begins at offset cursor within text.
+    override fun findTokenEnd(inputText: CharSequence, cursor: Int): Int {
+        var idx = cursor
+        val length = inputText.length
+        while (idx < length) {
+            if (inputText[i] == ' ') {
+                return idx
+            } else {
+                idx++
+            }
+        }
+        return length
+    }
+
+    // Returns text, modified, if necessary, to ensure that it ends with a token terminator
+    // (for example a space or comma).
+    override fun terminateToken(inputText: CharSequence): CharSequence {
+        var idx = inputText.length
+        while (idx > 0 && inputText[idx - 1] == ' ') {
+            idx--
+        }
+        return if (idx > 0 && inputText[idx - 1] == ' ') {
+            inputText
+        } else {
+            if (inputText is Spanned) {
+                val sp = SpannableString("$inputText")
+                TextUtils.copySpansFrom(
+                    inputText, 0, inputText.length,
+                    Any::class.java, sp, 0
+                )
+                sp
+            } else {
+                "$inputText"
+            }
+        }
     }
 }
