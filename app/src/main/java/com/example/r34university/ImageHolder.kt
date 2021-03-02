@@ -8,7 +8,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 
 class ImageHolder(view: View) : RecyclerView.ViewHolder(view) {
-    var thumbnail: ImageView = view.findViewById(R.id.image_thumbnail)
+    private var thumbnail: ImageView = view.findViewById(R.id.image_thumbnail)
     var thumb = ""
     var detail = ""
     var full = ""

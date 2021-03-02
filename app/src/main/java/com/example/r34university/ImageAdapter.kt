@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlin.collections.HashMap
 
 
-class ImageAdapter(private val itemsList: List<ImageItem>) : RecyclerView.Adapter<ImageHolder>() {
+class ImageAdapter(private val itemsList: List<ImageItem>, private val showFull: (Int) -> Unit) : RecyclerView.Adapter<ImageHolder>() {
     private val thumbCache = HashMap<Int, Bitmap>() // TODO cache for thumbnails
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageHolder {
@@ -21,20 +21,17 @@ class ImageAdapter(private val itemsList: List<ImageItem>) : RecyclerView.Adapte
 
     override fun onBindViewHolder(holder: ImageHolder, position: Int) {
         val item = itemsList[position]
-        val thumbnail: Bitmap? = thumbCache[item.id]
-        holder.thumb = item.thumb
-        holder.detail = item.detail
-        holder.full = item.full
+        val thumbnail: Bitmap? = thumbCache[item.detail.hashCode()] // TODO
+        holder.thumb = item.thumb.toString()
+        holder.detail = item.detail.toString()
+        holder.full = item.full.toString()
 
         holder.bind(thumbnail)
-        holder.itemView.setOnClickListener { showFull(item.detail, item.full) }
+        if (item.detail != null && item.full != null)
+            holder.itemView.setOnClickListener { showFull(position) }
     }
 
     override fun getItemCount(): Int {
         return itemsList.size
-    }
-    
-    private fun showFull(detailLink: String, fullLink: String) {
-        return
     }
 }

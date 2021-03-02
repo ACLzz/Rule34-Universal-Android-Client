@@ -2,11 +2,13 @@ package com.example.r34university
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.os.Parcel
+import android.os.Parcelable
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.RecyclerView
 import com.example.r34university.databinding.ResultsActivityBinding
 import com.google.android.flexbox.AlignItems
 import com.google.android.flexbox.FlexDirection
@@ -18,12 +20,36 @@ import java.util.concurrent.locks.ReentrantLock
 import kotlin.collections.ArrayList
 
 
-class ImageItem (
-    val thumb: String,
-    val detail: String,
-    val full: String) {
+class ImageItem(
+    val thumb: String? = "",
+    val detail: String? = "",
+    val full: String? = "") : Parcelable {
 
-    var id: Int = 0
+    constructor(parcel: Parcel) : this(
+        parcel.readString(),
+        parcel.readString(),
+        parcel.readString()
+    )
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(thumb)
+        parcel.writeString(detail)
+        parcel.writeString(full)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<ImageItem> {
+        override fun createFromParcel(parcel: Parcel): ImageItem {
+            return ImageItem(parcel)
+        }
+
+        override fun newArray(size: Int): Array<ImageItem?> {
+            return arrayOfNulls(size)
+        }
+    }
 }
 
 interface Communicator {
@@ -55,7 +81,7 @@ class ResultsActivity : AppCompatActivity(), Communicator {
         lm.flexWrap = FlexWrap.WRAP
         lm.alignItems = AlignItems.STRETCH
 
-        customAdapter = ImageAdapter(items)
+        customAdapter = ImageAdapter(items, ::showFull)
         binding.resultsView.apply {
             adapter = customAdapter
             layoutManager = lm
@@ -75,6 +101,14 @@ class ResultsActivity : AppCompatActivity(), Communicator {
         } finally {
             forceSearchLock.unlock()
         }
+    }
+
+    private fun showFull(imageId: Int): Unit {
+        val i = Intent(this, DetailActivity::class.java).apply {
+            putExtra("imageId", imageId)
+            putExtra("results", items)
+        }
+        startActivity(i)
     }
 
     fun hideKeyboard() {
