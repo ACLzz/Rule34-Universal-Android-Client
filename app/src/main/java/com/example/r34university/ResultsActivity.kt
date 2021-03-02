@@ -21,9 +21,10 @@ import kotlin.collections.ArrayList
 
 
 class ImageItem(
-    val thumb: String? = "",
-    val detail: String? = "",
-    val full: String? = "") : Parcelable {
+    var thumb: String? = "",
+    var detail: String? = "",
+    var full: String? = "") : Parcelable {
+    var tags = listOf<String>()
 
     constructor(parcel: Parcel) : this(
         parcel.readString(),
