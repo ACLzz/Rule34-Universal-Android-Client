@@ -2,30 +2,31 @@ package com.example.r34university
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.SpannableString
-import android.text.Spanned
-import android.text.TextUtils
+import android.text.*
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
+import android.widget.MultiAutoCompleteTextView
 import android.widget.MultiAutoCompleteTextView.Tokenizer
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import com.example.r34university.databinding.SearchFragmentBinding
 import kotlinx.android.synthetic.main.search_fragment.*
+import org.w3c.dom.Text
+import kotlin.concurrent.thread
 
 
 class SearchFragment : Fragment() {
     private var _binding: SearchFragmentBinding? = null
     private val binding get() = _binding!!
+
     private lateinit var communicator: Communicator
-
+    private lateinit var searchField: MultiAutoCompleteTextView
     private lateinit var tags: List<String>
-
-    init {
-        getTags()
-    }
+    private lateinit var tagsAdapter: ArrayAdapter<String>
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,7 +43,7 @@ class SearchFragment : Fragment() {
             search()
         }
 
-        val searchField = binding.searchField
+        searchField = binding.searchField
         searchField.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
             if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
                 search()
@@ -51,7 +52,15 @@ class SearchFragment : Fragment() {
             false
         })
 
-        val tagsAdapter = ArrayAdapter(
+        if (!ConfigRepo.useAutocompleteLoader) {
+            thread { getTags() }.join()
+        } else
+            tags = arrayListOf("")
+
+        val mWatcher = MyWatcher(::getTags, ::updateTags)
+        searchField.addTextChangedListener(mWatcher)
+
+        tagsAdapter = ArrayAdapter(
             activity?.applicationContext!!,
             android.R.layout.simple_list_item_1,
             tags
@@ -80,20 +89,29 @@ class SearchFragment : Fragment() {
             return
         }
 
-        val items = getResults(searchRequest)
+        val items = ContentParser.search(searchRequest)
         communicator.passSearchResults(items)
         hideKeyboard()
     }
 
     private fun getTags() {
         // getting tags list from site
-        // FIXME
-        tags = listOf("dark_souls(4)", "less(1)", "girl(4)", "tits(4)")
+        // TODO delete
+        // tags = listOf("dark_souls(4)", "less(1)", "girl(4)", "tits(4)")
+        tags = ContentParser.getTags(searchField.text.toString())
+    }
+
+    private fun updateTags() {
+        val adapter = searchField.adapter as ArrayAdapter<String>
+        adapter.clear()
+        tags.forEach { adapter.add(it) }
+
+        adapter.filter.filter(searchField.text, null)
     }
 
     private fun getResults(search: String) : List<ImageItem> {
         // getting images list from server
-        // FIXME
+        // TODO delete
         var items = listOf<ImageItem>(
             ImageItem("https://rule34.xxx/thumbnails/3913/thumbnail_3c2496972f2a8747910d325aa0d091b0.jpg?4432376", "https://rule34.xxx/index.php?page=post&s=view&id=4432376", "https://rule34.xxx//samples/3913/sample_3c2496972f2a8747910d325aa0d091b0.jpg?4432376"),
             ImageItem("https://rule34.xxx/thumbnails/3900/thumbnail_2f249cbddb0c1cd5c3519c0839be4185.jpg?4415977", "https://rule34.xxx/index.php?page=post&s=view&id=4415977", "https://rule34.xxx//samples/3900/sample_2f249cbddb0c1cd5c3519c0839be4185.jpg?4415977"),
@@ -115,6 +133,7 @@ class SearchFragment : Fragment() {
 }
 
 class SpaceTokenizer : Tokenizer {
+    // TODO ignore minuses
     private val i = 0
 
     // Returns the start of the token that ends at offset cursor within text.
@@ -166,4 +185,24 @@ class SpaceTokenizer : Tokenizer {
             }
         }
     }
+}
+
+class MyWatcher(private val getTags: () -> Unit, private val updateTags: () -> Unit): TextWatcher {
+    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+        return
+    }
+
+    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+        return
+    }
+
+    override fun afterTextChanged(s: Editable?) {
+        if (ConfigRepo.useAutocompleteLoader) {
+            thread {
+                getTags()
+            }.join()
+            updateTags()
+        }
+    }
+
 }

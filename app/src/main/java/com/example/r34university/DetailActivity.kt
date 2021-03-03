@@ -37,7 +37,7 @@ class DetailActivity: AppCompatActivity(), Communicator {
 
         items = intent.getParcelableArrayListExtra<ImageItem>("results")!!
         currentPos = intent.getIntExtra("imageId", 0)
-        getDetails()
+        ContentParser.getDetails(currentImage)
 
         binding = DetailActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -77,8 +77,7 @@ class DetailActivity: AppCompatActivity(), Communicator {
     }
 
     private fun getDetails() {
-        // TODO parsing
-        // FIXME
+        // TODO delete
         currentImage.detail = currentImage.detail
         currentImage.full = currentImage.full
 
@@ -90,7 +89,7 @@ class DetailActivity: AppCompatActivity(), Communicator {
             return
 
         currentPos++
-        getDetails()
+        ContentParser.getDetails(currentImage)
         showImage(currentImage.full, currentImage.detail)
     }
 
@@ -99,7 +98,7 @@ class DetailActivity: AppCompatActivity(), Communicator {
             return
 
         currentPos--
-        getDetails()
+        ContentParser.getDetails(currentImage)
         showImage(currentImage.full, currentImage.detail)
     }
 
