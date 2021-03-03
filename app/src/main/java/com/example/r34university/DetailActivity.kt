@@ -1,11 +1,14 @@
 package com.example.r34university
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.View
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.r34university.databinding.DetailActivityBinding
@@ -14,6 +17,7 @@ import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
 import kotlinx.android.synthetic.main.detail_activity.view.*
+import kotlin.math.abs
 
 class DetailActivity: AppCompatActivity(), Communicator {
     private lateinit var binding: DetailActivityBinding
@@ -24,7 +28,9 @@ class DetailActivity: AppCompatActivity(), Communicator {
     private var currentPos = 0
     private val currentImage: ImageItem get() = items[currentPos]
     private val tagsList get() = currentImage.tags
+    private lateinit var tagsColorList: List<Int>
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
@@ -40,7 +46,17 @@ class DetailActivity: AppCompatActivity(), Communicator {
         lm.flexWrap = FlexWrap.WRAP
         lm.alignItems = AlignItems.STRETCH
 
-        customTagsAdapter = TagsListAdapter(tagsList, ::searchTag)
+        tagsColorList = listOf(
+            ContextCompat.getColor(applicationContext, R.color.redTagColor),
+            ContextCompat.getColor(applicationContext, R.color.purpleTagColor),
+            ContextCompat.getColor(applicationContext, R.color.navyTagColor),
+            ContextCompat.getColor(applicationContext, R.color.blueTagColor),
+            ContextCompat.getColor(applicationContext, R.color.greenTagColor),
+            ContextCompat.getColor(applicationContext, R.color.yellowTagColor),
+            ContextCompat.getColor(applicationContext, R.color.orangeTagColor),
+        )
+
+        customTagsAdapter = TagsListAdapter(tagsList, tagsColorList, ::searchTag)
         binding.tagsList.apply {
             adapter = customTagsAdapter
             layoutManager = lm
@@ -52,12 +68,10 @@ class DetailActivity: AppCompatActivity(), Communicator {
         binding.nextButton.setOnClickListener {
             goNextImage()
         }
-        binding.tagsLayout.setOnClickListener {
-            hideTags()
-        }
-        binding.tagsViewToggler.setOnClickListener {
-            showTags()
-        }
+
+        binding.tagsLayout.setOnClickListener { hideTags() }
+        binding.tagsView.setOnClickListener { hideTags() }
+        binding.tagsViewToggler.setOnClickListener { showTags() }
 
         showImage(currentImage.full, currentImage.detail)
     }

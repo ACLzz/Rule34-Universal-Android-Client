@@ -9,6 +9,7 @@ import android.os.Parcelable
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.example.r34university.databinding.ResultsActivityBinding
 import com.google.android.flexbox.AlignItems
 import com.google.android.flexbox.FlexDirection

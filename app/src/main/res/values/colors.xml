@@ -9,4 +9,13 @@
     <color name="colorBackground">#006363</color>
     <color name="colorPrimaryDark">#1D7373</color>
     <color name="colorAccent">#5CCCCC</color>
+
+    -- tags colors !--
+    <color name="redTagColor">#c50000</color>
+    <color name="purpleTagColor">#a40090</color>
+    <color name="navyTagColor">#0018a0</color>
+    <color name="blueTagColor">#0085a1</color>
+    <color name="greenTagColor">#10a100</color>
+    <color name="yellowTagColor">#7aa100</color>
+    <color name="orangeTagColor">#a17000</color>
 </resources>
