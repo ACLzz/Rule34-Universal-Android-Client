@@ -24,8 +24,6 @@ class Rule34xxxParser : Parser {
     }
 
     override fun search(search: String): List<ImageItem> {
-        // TODO
-        // https://rule34.xxx/index.php?page=post&s=list&tags=my_first_tag+my_scend_tag+
         val url = buildUrl(baseLink + "index.php", mapOf(
             "page" to "post",
             "s" to "list",
@@ -51,6 +49,17 @@ class Rule34xxxParser : Parser {
     }
 
     override fun getDetails(imageItem: ImageItem) {
-        // TODO
+        val url = buildUrl(baseLink + imageItem.detail.toString())
+        var resp: Document = Document("")
+        thread {
+            resp = connect(url).get()
+        }.join()
+
+        val tags = arrayListOf<String>()
+        resp.select("ul#tag-sidebar a").forEach {
+            tags.add(it.text().replace(Regex(" "), "_"))
+        }
+        imageItem.full = resp.select("#image").attr("src").toString()
+        imageItem.tags = tags
     }
 }

@@ -76,14 +76,6 @@ class DetailActivity: AppCompatActivity(), Communicator {
         showImage(currentImage.full, currentImage.detail)
     }
 
-    private fun getDetails() {
-        // TODO delete
-        currentImage.detail = currentImage.detail
-        currentImage.full = currentImage.full
-
-        currentImage.tags = listOf("dark_souls", "tits", "girl")
-    }
-
     private fun goNextImage() {
         if (currentPos == items.lastIndex)
             return

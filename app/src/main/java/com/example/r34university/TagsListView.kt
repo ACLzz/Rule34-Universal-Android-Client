@@ -32,7 +32,6 @@ class TagsListAdapter (private val tagsList: List<String>, private val tagsColor
 
     override fun onBindViewHolder(holder: TagsListHolder, position: Int) {
         val tag = tagsList[position]
-        // TODO change background color and text white level
         holder.itemView.tag_text.text = tag
         val tagsBackground = holder.itemView.tag_text.background as GradientDrawable
         tagsBackground.setColor(pickColor(tag))

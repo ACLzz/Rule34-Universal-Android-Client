@@ -10,7 +10,7 @@ val ContentParser = when (ConfigRepo) {
     else -> Rule34xxxParser()
 } as Parser
 
-fun buildUrl(path: String, args: Map<String, String>) : String {
+fun buildUrl(path: String, args: Map<String, String> = mapOf()) : String {
     var url = path
     if (args.isNotEmpty()) {
         url += "?"
