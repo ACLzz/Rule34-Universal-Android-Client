@@ -212,6 +212,7 @@ class MyWatcher(private val getTags: () -> Unit, private val updateTags: () -> U
     }
 
     private fun newTags() {
+        // TODO async
         thread {
             getTags()
         }.join()

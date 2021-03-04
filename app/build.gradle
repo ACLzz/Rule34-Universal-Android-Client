@@ -47,8 +47,8 @@ dependencies {
     annotationProcessor "com.github.bumptech.glide:compiler:$rootProject.glide_version"
     implementation 'com.google.android:flexbox:0.3.0-alpha3'
 
-    //implementation "org.jsoup:jsoup:$rootProject.jsoup_version"
-    implementation ("io.karn:khttp-android:0.1.2")
+    implementation "org.jsoup:jsoup:$rootProject.jsoup_version"
+    implementation "io.karn:khttp-android:0.1.2"
     implementation "org.jetbrains.kotlin:kotlin-reflect:1.4.21"
     implementation 'com.android.support:multidex:1.0.3'
 
