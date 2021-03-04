@@ -7,15 +7,12 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
 import android.widget.MultiAutoCompleteTextView
 import android.widget.MultiAutoCompleteTextView.Tokenizer
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import com.example.r34university.databinding.SearchFragmentBinding
 import kotlinx.android.synthetic.main.search_fragment.*
-import org.w3c.dom.Text
 import kotlin.concurrent.thread
 
 
@@ -57,8 +54,10 @@ class SearchFragment : Fragment() {
         } else
             tags = arrayListOf("")
 
-        val mWatcher = MyWatcher(::getTags, ::updateTags)
-        searchField.addTextChangedListener(mWatcher)
+        if (ConfigRepo.useAutocompleteLoader) {
+            val mWatcher = MyWatcher(::getTags, ::updateTags)
+            searchField.addTextChangedListener(mWatcher)
+        }
 
         tagsAdapter = ArrayAdapter(
             activity?.applicationContext!!,
@@ -96,9 +95,8 @@ class SearchFragment : Fragment() {
 
     private fun getTags() {
         // getting tags list from site
-        // TODO delete
-        // tags = listOf("dark_souls(4)", "less(1)", "girl(4)", "tits(4)")
-        tags = ContentParser.getTags(searchField.text.toString())
+        val formattedTag = searchField.text.toString().split(" ").last().replace(Regex("-"), "")
+        tags = ContentParser.getTags(formattedTag)
     }
 
     private fun updateTags() {
@@ -133,16 +131,17 @@ class SearchFragment : Fragment() {
 }
 
 class SpaceTokenizer : Tokenizer {
-    // TODO ignore minuses
     private val i = 0
 
     // Returns the start of the token that ends at offset cursor within text.
     override fun findTokenStart(inputText: CharSequence, cursor: Int): Int {
         var idx = cursor
-        while (idx > 0 && inputText[idx - 1] != ' ') {
+        val text = formatText(inputText)
+
+        while (idx > 0 && text[idx - 1] != ' ') {
             idx--
         }
-        while (idx < cursor && inputText[idx] == ' ') {
+        while (idx < cursor && text[idx] == ' ') {
             idx++
         }
         return idx
@@ -152,9 +151,11 @@ class SpaceTokenizer : Tokenizer {
     // begins at offset cursor within text.
     override fun findTokenEnd(inputText: CharSequence, cursor: Int): Int {
         var idx = cursor
-        val length = inputText.length
+        val text = formatText(inputText)
+
+        val length = text.length
         while (idx < length) {
-            if (inputText[i] == ' ') {
+            if (text[i] == ' ') {
                 return idx
             } else {
                 idx++
@@ -166,43 +167,55 @@ class SpaceTokenizer : Tokenizer {
     // Returns text, modified, if necessary, to ensure that it ends with a token terminator
     // (for example a space or comma).
     override fun terminateToken(inputText: CharSequence): CharSequence {
-        var idx = inputText.length
-        while (idx > 0 && inputText[idx - 1] == ' ') {
+        val text = formatText(inputText)
+        var idx = text.length
+        while (idx > 0 && text[idx - 1] == ' ') {
             idx--
         }
-        return if (idx > 0 && inputText[idx - 1] == ' ') {
-            inputText
+        return if (idx > 0 && text[idx - 1] == ' ') {
+            text
         } else {
-            if (inputText is Spanned) {
-                val sp = SpannableString("$inputText")
+            if (text is Spanned) {
+                val sp = SpannableString("$text")
                 TextUtils.copySpansFrom(
-                    inputText, 0, inputText.length,
+                    text, 0, text.length,
                     Any::class.java, sp, 0
                 )
                 sp
             } else {
-                "$inputText"
+                "$text"
             }
         }
     }
+
+    private fun formatText(text: CharSequence) = text.replace(Regex("-"), " ") as CharSequence
 }
 
 class MyWatcher(private val getTags: () -> Unit, private val updateTags: () -> Unit): TextWatcher {
+    private var prevSeq: CharSequence = ""
     override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
         return
     }
 
     override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-        return
+        s?.let {
+            val fLength = prevSeq.length
+            val sLength = s.length
+            if (fLength < sLength) {
+                newTags()
+            }
+            prevSeq = s.toString()
+        }
     }
 
     override fun afterTextChanged(s: Editable?) {
-        if (ConfigRepo.useAutocompleteLoader) {
-            thread {
-                getTags()
-            }.join()
-            updateTags()
-        }
+    }
+
+    private fun newTags() {
+        thread {
+            getTags()
+        }.join()
+        updateTags()
     }
 
 }

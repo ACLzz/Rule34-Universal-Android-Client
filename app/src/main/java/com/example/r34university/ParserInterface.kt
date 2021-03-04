@@ -9,3 +9,24 @@ interface Parser {
 val ContentParser = when (ConfigRepo) {
     else -> Rule34xxxParser()
 } as Parser
+
+fun buildUrl(path: String, args: Map<String, String>) : String {
+    var url = path
+    if (args.isNotEmpty()) {
+        url += "?"
+    }
+
+    args.forEach { (id, value) ->
+        url += "$id="
+        val argArray = value.split(" ")
+
+        argArray.forEach {
+            url += it
+            if (it != argArray.last())
+                url += "+"
+        }
+        url += "&"
+    }
+    url = url.removeSuffix("&")
+    return url
+}
