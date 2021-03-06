@@ -21,4 +21,5 @@ class SearchActivity : AppCompatActivity(), Communicator {
     }
 
     override fun passSearchResults(results: List<ImageItem>) {}
+    override fun passPagesCount(count: Int) {}
 }

@@ -14,16 +14,28 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout="@layout/search_fragment" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/results_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/page_bar_results_fragment"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/results_search_fragment" />
+
+    <fragment
+        android:id="@+id/page_bar_results_fragment"
+        android:name="com.example.r34university.PageBarFragment"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:tag="page_bar_results_fragment_tag"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout="@layout/page_bar_fragment"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

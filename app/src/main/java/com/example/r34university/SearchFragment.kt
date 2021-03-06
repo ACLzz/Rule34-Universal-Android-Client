@@ -13,6 +13,7 @@ import android.widget.MultiAutoCompleteTextView.Tokenizer
 import androidx.fragment.app.Fragment
 import com.example.r34university.databinding.SearchFragmentBinding
 import kotlinx.android.synthetic.main.search_fragment.*
+import parsers.ContentParser
 import kotlin.concurrent.thread
 
 
@@ -39,6 +40,7 @@ class SearchFragment : Fragment() {
         binding.searchButton.setOnClickListener {
             search()
         }
+        communicator = activity as Communicator
 
         searchField = binding.searchField
         searchField.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
@@ -73,7 +75,6 @@ class SearchFragment : Fragment() {
     }
 
     fun search() {
-        communicator = activity as Communicator
         val searchRequest = binding.searchField.text.toString()
 
         if (communicator !is ResultsActivity) {
@@ -89,7 +90,11 @@ class SearchFragment : Fragment() {
         }
 
         val items = ContentParser.search(searchRequest)
+        val pageCount = ContentParser.getPagesCount(searchRequest)
+
         communicator.passSearchResults(items)
+        communicator.passPagesCount(pageCount)
+
         hideKeyboard()
     }
 

@@ -9,6 +9,9 @@
     <color name="colorBackground">#006363</color>
     <color name="colorPrimaryDark">#1D7373</color>
     <color name="colorAccent">#5CCCCC</color>
+    <color name="colorText">#bbbbbb</color>
+    <color name="colorAccentText">#eeeeee</color>
+    <color name="colorLinkText">#33ffff</color>
 
     -- tags colors !--
     <color name="redTagColor">#c50000</color>

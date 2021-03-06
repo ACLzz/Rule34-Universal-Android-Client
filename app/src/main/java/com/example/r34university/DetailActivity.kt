@@ -3,12 +3,10 @@ package com.example.r34university
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.view.MotionEvent
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.r34university.databinding.DetailActivityBinding
@@ -16,8 +14,7 @@ import com.google.android.flexbox.AlignItems
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
-import kotlinx.android.synthetic.main.detail_activity.view.*
-import kotlin.math.abs
+import parsers.ContentParser
 
 class DetailActivity: AppCompatActivity(), Communicator {
     private lateinit var binding: DetailActivityBinding
@@ -42,10 +39,6 @@ class DetailActivity: AppCompatActivity(), Communicator {
         binding = DetailActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val lm = FlexboxLayoutManager(FlexDirection.ROW)
-        lm.flexWrap = FlexWrap.WRAP
-        lm.alignItems = AlignItems.STRETCH
-
         tagsColorList = listOf(
             ContextCompat.getColor(applicationContext, R.color.redTagColor),
             ContextCompat.getColor(applicationContext, R.color.purpleTagColor),
@@ -55,6 +48,11 @@ class DetailActivity: AppCompatActivity(), Communicator {
             ContextCompat.getColor(applicationContext, R.color.yellowTagColor),
             ContextCompat.getColor(applicationContext, R.color.orangeTagColor),
         )
+
+        // FIXME recyclerview not resizing and scrolling when it mustn't
+        val lm = FlexboxLayoutManager(FlexDirection.ROW)
+        lm.flexWrap = FlexWrap.WRAP
+        lm.alignItems = AlignItems.STRETCH
 
         customTagsAdapter = TagsListAdapter(tagsList, tagsColorList, ::searchTag)
         binding.tagsList.apply {
@@ -137,4 +135,5 @@ class DetailActivity: AppCompatActivity(), Communicator {
     }
 
     override fun passSearchResults(results: List<ImageItem>) {}
+    override fun passPagesCount(count: Int) {}
 }

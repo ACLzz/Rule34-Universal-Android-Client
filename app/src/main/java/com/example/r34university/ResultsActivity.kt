@@ -55,6 +55,7 @@ class ImageItem(
 
 interface Communicator {
     fun passSearchResults(results: List<ImageItem>)
+    fun passPagesCount(count: Int)
 }
 
 fun Context.hideKeyboard(view: View) {
@@ -64,7 +65,7 @@ fun Context.hideKeyboard(view: View) {
 
 class ResultsActivity : AppCompatActivity(), Communicator {
     // TODO bottom bar with page navigation
-    // TODO gifs support
+    // TODO videos support
     private lateinit var binding: ResultsActivityBinding
 
     private val items = ArrayList<ImageItem>()
@@ -126,6 +127,12 @@ class ResultsActivity : AppCompatActivity(), Communicator {
         items.clear()
         items.addAll(results)
         customAdapter.notifyDataSetChanged()
+    }
+
+    override fun passPagesCount(count: Int) {
+        val pageBar = supportFragmentManager.findFragmentByTag("page_bar_results_fragment_tag") as PageBarFragment
+        pageBar.pageCount = count
+        pageBar.updatePageList()
     }
 
     override fun onBackPressed() {

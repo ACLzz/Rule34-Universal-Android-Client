@@ -1,22 +1,22 @@
 package com.example.r34university
 
-enum class contentSource {rule34xxx}                        // website sources
+enum class ContentSource {Rule34xxx}                        // website sources
 
 object ConfigRepo {
+    lateinit var source: ContentSource
     init {
         loadFromDisk()
     }
 
-    lateinit var source: contentSource
     val useAutocompleteLoader: Boolean get() {              // search for tags on search field update
         return when (source) {
-            contentSource.rule34xxx -> true
+            ContentSource.Rule34xxx -> true
             else -> false
         }
     }
 
     private fun loadFromDisk() {
-        // TODO load from disk
-        source = contentSource.rule34xxx
+        // TODO
+        source = ContentSource.Rule34xxx
     }
 }
