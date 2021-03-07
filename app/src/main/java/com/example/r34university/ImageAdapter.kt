@@ -1,10 +1,12 @@
 package com.example.r34university
 
 import android.graphics.Bitmap
+import android.graphics.BitmapShader
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import kotlin.collections.HashMap
+import kotlin.coroutines.coroutineContext
 
 
 class ImageAdapter(private val itemsList: List<ImageItem>, private val showFull: (Int) -> Unit) : RecyclerView.Adapter<ImageHolder>() {

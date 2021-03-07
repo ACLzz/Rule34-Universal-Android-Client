@@ -1,11 +1,14 @@
 package com.example.r34university
 
-import android.graphics.Bitmap
+import android.graphics.*
+import android.os.Build
 import android.view.View
 import android.widget.ImageView
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import kotlinx.android.synthetic.main.image_item.view.*
 
 class ImageHolder(view: View) : RecyclerView.ViewHolder(view) {
     var thumbnail: ImageView = view.findViewById(R.id.image_thumbnail)
@@ -13,6 +16,7 @@ class ImageHolder(view: View) : RecyclerView.ViewHolder(view) {
     var detail = ""
     var full = ""
 
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     fun bind(cachedThumb: Bitmap?) {
         val requestOptions = RequestOptions()
             .placeholder(R.drawable.ic_launcher_foreground)
@@ -28,5 +32,7 @@ class ImageHolder(view: View) : RecyclerView.ViewHolder(view) {
         cachedThumb?.let {
             thumbnail.setImageBitmap(cachedThumb)
         }
+
+        this.itemView.image_thumbnail.clipToOutline = true
     }
 }

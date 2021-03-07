@@ -11,10 +11,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import com.example.r34university.databinding.ResultsActivityBinding
-import com.google.android.flexbox.AlignItems
-import com.google.android.flexbox.FlexDirection
-import com.google.android.flexbox.FlexWrap
-import com.google.android.flexbox.FlexboxLayoutManager
+import com.google.android.flexbox.*
 import kotlinx.android.synthetic.main.search_fragment.*
 import java.util.*
 import java.util.concurrent.locks.ReentrantLock
@@ -84,7 +81,8 @@ class ResultsActivity : AppCompatActivity(), Communicator {
 
         val lm = FlexboxLayoutManager(FlexDirection.ROW)
         lm.flexWrap = FlexWrap.WRAP
-        lm.alignItems = AlignItems.STRETCH
+        lm.alignItems = AlignItems.CENTER
+        lm.justifyContent = JustifyContent.SPACE_BETWEEN
 
         customAdapter = ImageAdapter(items, ::showFull)
         binding.resultsView.apply {
