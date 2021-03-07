@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorPrimary">
+    android:background="@drawable/page_bar_fragment_shape">
 
     <LinearLayout
         android:id="@+id/page_list"

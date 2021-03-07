@@ -2,24 +2,24 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/search_background"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorPrimary">
+    android:background="@drawable/search_fragment_shape">
 
     <MultiAutoCompleteTextView
         android:id="@+id/search_field"
-        android:layout_width="233dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:textColor="@color/colorForeground"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.196"
+        app:layout_constraintEnd_toStartOf="@+id/search_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="LabelFor" />
@@ -28,7 +28,6 @@
         android:id="@+id/search_button"
         android:layout_width="80dp"
         android:layout_height="30dp"
-        android:layout_marginStart="12dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
@@ -38,7 +37,5 @@
         android:textColor="@color/colorForeground"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.28"
-        app:layout_constraintStart_toEndOf="@+id/search_field"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

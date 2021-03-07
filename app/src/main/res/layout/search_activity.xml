@@ -7,52 +7,66 @@
     android:layout_height="match_parent"
     android:background="@color/colorBackground">
 
-    <androidx.fragment.app.FragmentContainerView
+    <fragment
         android:id="@+id/search_fragment_main"
         android:name="com.example.r34university.SearchFragment"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="32dp"
+        android:layout_marginEnd="24dp"
+        android:tag="search_main_fragment"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+        tools:layout="@layout/search_fragment" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="0dp"
-        android:layout_height="100dp"
+        android:layout_height="20dp"
         android:layout_marginTop="96dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/imageView">
 
         <TextView
             android:id="@+id/tags_label"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="Tags"
             android:textAlignment="center"
-            android:textColor="@color/colorAccent"/>
+            android:textColor="@color/colorAccent" />
 
         <TextView
             android:id="@+id/posts_label"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="Posts"
             android:textAlignment="center"
-            android:textColor="@color/colorAccent"/>
+            android:textColor="@color/colorAccent" />
 
         <TextView
-            android:id="@+id/textView4"
+            android:id="@+id/settings_label"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="Settings"
             android:textAlignment="center"
-            android:textColor="@color/colorAccent"/>
+            android:textColor="@color/colorAccent" />
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_launcher_foreground" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

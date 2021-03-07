@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import com.example.r34university.databinding.SearchActivityBinding
+import kotlinx.android.synthetic.main.search_fragment.*
 
 class SearchActivity : AppCompatActivity(), Communicator {
     private lateinit var binding: SearchActivityBinding

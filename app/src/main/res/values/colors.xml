@@ -4,14 +4,14 @@
     <color name="alphaBlack">#5B000000</color>
     <color name="fullWhite">#ffffff</color>
     <color name="alpha">#00000000</color>
-    <color name="colorPrimary">#009999</color>
-    <color name="colorForeground">#33CCCC</color>
-    <color name="colorBackground">#006363</color>
-    <color name="colorPrimaryDark">#1D7373</color>
-    <color name="colorAccent">#5CCCCC</color>
+    <color name="colorPrimary">#4458BB</color>
+    <color name="colorForeground">#BBA744</color>
+    <color name="colorBackground">#202958</color>
+    <color name="colorPrimaryDark">#192043</color>
+    <color name="colorAccent">#BCAA49</color>
     <color name="colorText">#bbbbbb</color>
     <color name="colorAccentText">#eeeeee</color>
-    <color name="colorLinkText">#33ffff</color>
+    <color name="colorLinkText">#BBA744</color>
 
     -- tags colors !--
     <color name="redTagColor">#c50000</color>

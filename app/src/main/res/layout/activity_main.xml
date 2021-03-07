@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    android:background="@color/colorPrimary">
+    android:background="@color/colorBackground">
 
     <ImageView
         android:id="@+id/app_preview"
@@ -25,6 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="@string/app_name"
+        android:textColor="@android:color/darker_gray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/app_preview" />
