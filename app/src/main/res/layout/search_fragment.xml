@@ -5,6 +5,7 @@
     android:id="@+id/search_background"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:focusable="true"
     android:background="@drawable/search_fragment_shape">
 
     <MultiAutoCompleteTextView
@@ -18,6 +19,7 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:textColor="@color/colorForeground"
+        android:focusableInTouchMode="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/search_button"
         app:layout_constraintStart_toStartOf="parent"

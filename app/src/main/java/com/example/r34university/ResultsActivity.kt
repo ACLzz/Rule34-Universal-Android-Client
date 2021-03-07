@@ -75,6 +75,7 @@ class ResultsActivity : AppCompatActivity(), Communicator {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
+        ConfigRepo.perfs = getSharedPreferences(cfgFileName, Context.MODE_PRIVATE)
 
         binding = ResultsActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)

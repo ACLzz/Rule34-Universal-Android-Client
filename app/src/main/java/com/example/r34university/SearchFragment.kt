@@ -96,6 +96,7 @@ class SearchFragment : Fragment() {
         communicator.passPagesCount(pageCount)
 
         hideKeyboard()
+        view?.clearFocus()
     }
 
     private fun getTags() {

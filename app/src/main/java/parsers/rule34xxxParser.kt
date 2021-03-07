@@ -3,20 +3,17 @@ package parsers
 import com.example.r34university.ImageItem
 import khttp.get
 import org.json.JSONObject
-import org.jsoup.helper.HttpConnection.connect
-import org.jsoup.nodes.Document
-import kotlin.concurrent.thread
 
-class Rule34xxxParser() : Parser {
+class Rule34xxxParser() : Parser() {
     override var currentSearch: String = ""
-    private val baseLink = "https://rule34.xxx/"
+    override val baseLink = "https://rule34.xxx/"
     private val maximumId = 200000      // rule34.xxx has dumb pid argument bound
     private val maximumPage = 4762
     private val idsPerPage = 42
 
     override fun getTags(search: String): List<String> {
         // TODO print lable but insert value in search field
-        val url = buildUrl(baseLink + "autocomplete.php", mapOf("q" to search))
+        val url = buildUrl("autocomplete.php", mapOf("q" to search))
         val resp = get(url).jsonArray
 
         val tags = ArrayList<String>()
@@ -29,22 +26,17 @@ class Rule34xxxParser() : Parser {
     }
 
     override fun search(search: String, page: Int): List<ImageItem> {
-        currentSearch = search
+        super.search(search, page)
+
         val urlParams = mutableMapOf(
             "page" to "post",
             "s" to "list",
             "tags" to search
         )
-
         if (page > 1)
             urlParams["pid"] = ((page-1) * idsPerPage).toString()
 
-        val url = buildUrl(baseLink + "index.php", urlParams)
-
-        var resp: Document = Document("")
-        thread {
-            resp = connect(url).get()
-        }.join()
+        val resp = getHtml("index.php", urlParams)
 
         val imageTags = resp.select("span.thumb")
         val imageItems = arrayListOf<ImageItem>()
@@ -61,16 +53,12 @@ class Rule34xxxParser() : Parser {
     }
 
     override fun getPagesCount(search: String): Int {
-        val url = buildUrl(baseLink + "index.php", mapOf(
+        val resp = getHtml("index.php", mapOf(
             "page" to "post",
             "s" to "list",
             "tags" to search,
             "pid" to "200000",
         ))
-        var resp: Document = Document("")
-        thread {
-            resp = connect(url).get()
-        }.join()
 
         val pageBar = resp.select("#paginator")
         val lastPage = pageBar.select("a").last()
@@ -86,11 +74,7 @@ class Rule34xxxParser() : Parser {
     }
 
     override fun getDetails(imageItem: ImageItem) {
-        val url = buildUrl(baseLink + imageItem.detail.toString())
-        var resp: Document = Document("")
-        thread {
-            resp = connect(url).get()
-        }.join()
+        val resp = getHtml(imageItem.detail.toString())
 
         val tags = arrayListOf<String>()
         resp.select("ul#tag-sidebar a").forEach {

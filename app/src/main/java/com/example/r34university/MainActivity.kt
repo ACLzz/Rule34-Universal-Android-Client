@@ -1,8 +1,10 @@
 package com.example.r34university
 
 import android.Manifest
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -19,7 +21,6 @@ class MainActivity : AppCompatActivity() {
     private val permissions = arrayOf(
         Manifest.permission.WRITE_EXTERNAL_STORAGE,
     )
-
     private val permissionsDetails = arrayOf(
         mapOf(
             "name" to "write storage",
@@ -34,6 +35,7 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.hide()
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        ConfigRepo.perfs = getSharedPreferences(cfgFileName, Context.MODE_PRIVATE)
 
         thread {
             checkPermissions()

@@ -1,5 +1,6 @@
 package com.example.r34university
 
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -32,6 +33,7 @@ class DetailActivity: AppCompatActivity(), Communicator {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
+        ConfigRepo.perfs = getSharedPreferences(cfgFileName, Context.MODE_PRIVATE)
 
         items = intent.getParcelableArrayListExtra<ImageItem>("results")!!
         currentPos = intent.getIntExtra("imageId", 0)
