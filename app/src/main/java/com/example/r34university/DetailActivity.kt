@@ -5,6 +5,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.RequiresApi
+import androidx.annotation.UiThread
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
@@ -24,7 +25,7 @@ class DetailActivity: AppCompatActivity(), Communicator {
 
     private var currentPos = 0
     private val currentImage: ImageItem get() = items[currentPos]
-    private val tagsList get() = currentImage.tags
+    private var tagsList = listOf<String>()
     private lateinit var tagsColorList: List<Int>
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -35,6 +36,7 @@ class DetailActivity: AppCompatActivity(), Communicator {
         items = intent.getParcelableArrayListExtra<ImageItem>("results")!!
         currentPos = intent.getIntExtra("imageId", 0)
         ContentParser.getDetails(currentImage)
+        tagsList = currentImage.tags
 
         binding = DetailActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -71,7 +73,7 @@ class DetailActivity: AppCompatActivity(), Communicator {
         binding.tagsView.setOnClickListener { hideTags() }
         binding.tagsViewToggler.setOnClickListener { showTags() }
 
-        showImage(currentImage.full, currentImage.detail)
+        showImage()
     }
 
     private fun goNextImage() {
@@ -79,8 +81,7 @@ class DetailActivity: AppCompatActivity(), Communicator {
             return
 
         currentPos++
-        ContentParser.getDetails(currentImage)
-        showImage(currentImage.full, currentImage.detail)
+        showImage()
     }
 
     private fun goPrevImage() {
@@ -88,8 +89,7 @@ class DetailActivity: AppCompatActivity(), Communicator {
             return
 
         currentPos--
-        ContentParser.getDetails(currentImage)
-        showImage(currentImage.full, currentImage.detail)
+        showImage()
     }
 
     private fun showTags() {
@@ -108,9 +108,13 @@ class DetailActivity: AppCompatActivity(), Communicator {
         tagsToggler.visibility = View.VISIBLE
     }
 
-    private fun showImage(fullLink: String?, detailLink: String?) {
+    private fun showImage() {
+        ContentParser.getDetails(currentImage)
+        tagsList = currentImage.tags
+        customTagsAdapter = TagsListAdapter(tagsList, tagsColorList, ::searchTag)
+        binding.tagsList.swapAdapter(customTagsAdapter, false)
+
         hideTags()
-        customTagsAdapter.notifyDataSetChanged()
 
         val requestOptions = RequestOptions()
             .placeholder(R.drawable.ic_launcher_foreground)
@@ -119,14 +123,14 @@ class DetailActivity: AppCompatActivity(), Communicator {
         Glide
             .with(applicationContext)
             .applyDefaultRequestOptions(requestOptions)
-            .load(fullLink)
+            .load(currentImage.full)
             .into(binding.fullImageView)
     }
 
     private fun searchTag(tagId: Int) {
         val tag = tagsList[tagId]
 
-        communicator = this as Communicator
+        communicator = this
         // starting new activity and passing search request
         val i = Intent(this, ResultsActivity::class.java).apply {
             putExtra("search", tag)

@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.os.Parcel
 import android.os.Parcelable
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import com.example.r34university.databinding.ResultsActivityBinding
@@ -127,11 +128,13 @@ class ResultsActivity : AppCompatActivity(), Communicator {
         items.clear()
         items.addAll(results)
         customAdapter.notifyDataSetChanged()
+        binding.resultsView.scrollToPosition(0)
     }
 
     override fun passPagesCount(count: Int) {
         val pageBar = supportFragmentManager.findFragmentByTag("page_bar_results_fragment_tag") as PageBarFragment
         pageBar.pageCount = count
+        pageBar.currentPage = 1
         pageBar.updatePageList()
     }
 

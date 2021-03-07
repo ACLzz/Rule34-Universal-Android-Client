@@ -16,7 +16,7 @@ import parsers.ContentParser
 
 class PageBarFragment : Fragment() {
     var pageCount: Int = 0
-    private var currentPage = 1
+    var currentPage = 1
     private var _binding: PageBarFragmentBinding? = null
     private val binding get() = _binding!!
     private val pageTextView: TextView get() = buildPageTextView()
@@ -124,7 +124,13 @@ class PageBarFragment : Fragment() {
 
             addPagesRange(pageCount-2, pageCount)
         } else {
-            addPagesRange(currentPage-1, pageCount)
+            var startPage = currentPage - 1
+            val lastPage = pageCount
+            if (currentPage == 1) {
+                startPage = 1
+            }
+
+            addPagesRange(startPage, lastPage)
         }
     }
 

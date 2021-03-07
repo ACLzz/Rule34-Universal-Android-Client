@@ -75,10 +75,12 @@ class Rule34xxxParser() : Parser {
         val pageBar = resp.select("#paginator")
         val lastPage = pageBar.select("a").last()
         lastPage?.let {
+            if (lastPage.text() == ">>" || lastPage.text() == ">") {
+                return maximumPage
+            }
             if (lastPage.text().toInt() <= maximumPage) {
                 return lastPage.text().toInt()
             }
-            return maximumPage
         }
         return 1
     }
