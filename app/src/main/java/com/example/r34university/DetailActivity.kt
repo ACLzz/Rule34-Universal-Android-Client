@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.annotation.UiThread
 import androidx.appcompat.app.AppCompatActivity
@@ -72,7 +73,7 @@ class DetailActivity: AppCompatActivity(), Communicator {
         }
 
         binding.tagsLayout.setOnClickListener { hideTags() }
-        binding.tagsView.setOnClickListener { hideTags() }
+        binding.tagsPlaceholder.setOnClickListener { if (binding.tagsLayout.visibility == ViewGroup.VISIBLE) hideTags() else showTags() }
         binding.tagsViewToggler.setOnClickListener { showTags() }
 
         showImage()
@@ -95,7 +96,7 @@ class DetailActivity: AppCompatActivity(), Communicator {
     }
 
     private fun showTags() {
-        val tags = binding.tagsView
+        val tags = binding.tagsLayout
         val tagsToggler = binding.tagsViewToggler
 
         tags.visibility = View.VISIBLE
@@ -103,7 +104,7 @@ class DetailActivity: AppCompatActivity(), Communicator {
     }
 
     private fun hideTags() {
-        val tags = binding.tagsView
+        val tags = binding.tagsLayout
         val tagsToggler = binding.tagsViewToggler
 
         tags.visibility = View.GONE

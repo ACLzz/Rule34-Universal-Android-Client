@@ -36,6 +36,12 @@
             android:background="@color/alpha" />
 
         <View
+            android:id="@+id/tags_placeholder"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:background="@color/alpha" />
+        <View
             android:id="@+id/next_button"
             android:layout_width="1dp"
             android:layout_height="match_parent"
@@ -43,30 +49,25 @@
             android:background="@color/alpha" />
     </LinearLayout>
 
-    <ScrollView
-        android:id="@+id/tags_view"
-        android:layout_width="0dp"
-        android:layout_height="200dp"
-        android:background="@drawable/tags_gradient"
-        android:clickable="false"
-        android:fadeScrollbars="false"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:visibility="visible">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            android:background="@drawable/tags_gradient"
+            android:clickable="false"
+            android:fadeScrollbars="false"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:visibility="visible"
             android:id="@+id/tags_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clipChildren="false"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tags_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingStart="16dp"
                 android:background="@color/alpha"
                 android:text="Tags:"
                 android:textColor="@color/fullWhite"
@@ -78,26 +79,10 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/tags_list"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tags_header"
-                tools:ignore="MissingConstraints">
+                android:layout_height="match_parent"
+                android:overScrollMode="never" />
 
-            </androidx.recyclerview.widget.RecyclerView>
-
-            <TextView
-                android:id="@+id/tags_placeholder"
-                android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:background="@color/alpha"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tags_list"
-                tools:ignore="MissingConstraints" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
+        </LinearLayout>
 
     <View
         android:id="@+id/tags_view_toggler"
