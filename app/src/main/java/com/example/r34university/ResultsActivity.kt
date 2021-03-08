@@ -101,7 +101,8 @@ class ResultsActivity : AppCompatActivity(), Communicator {
         }
 
         val pagesCount = intent.getIntExtra("pageCount", 1)
-        passPagesCount(pagesCount)
+        if (pagesCount > 1)
+            passPagesCount(pagesCount)
     }
 
     private fun forceSearch(searchRequest: String) {

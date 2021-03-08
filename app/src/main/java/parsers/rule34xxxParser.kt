@@ -85,8 +85,8 @@ class Rule34xxxParser() : Parser() {
         }
         imageItem.tags = tags
 
-        val video = resp.select("video")
-        imageItem.full = if (video != null) {
+        val video = resp.select("#video")
+        imageItem.full = if (video.size != 0) {
             video.select("source").attr("src")
         } else {
              resp.select("#image").attr("src").toString()
