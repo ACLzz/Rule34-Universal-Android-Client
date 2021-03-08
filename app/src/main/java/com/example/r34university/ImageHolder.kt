@@ -17,21 +17,15 @@ class ImageHolder(view: View) : RecyclerView.ViewHolder(view) {
     var full = ""
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    fun bind(cachedThumb: Bitmap?) {
+    fun bind() {
         val requestOptions = RequestOptions()
             .placeholder(R.drawable.ic_loading)
             .error(R.drawable.ic_default_image_item)
-
-        cachedThumb?: run {
-            Glide
-                .with(itemView.context)
-                .applyDefaultRequestOptions(requestOptions)
-                .load(thumb)
-                .into(thumbnail)
-        }
-        cachedThumb?.let {
-            thumbnail.setImageBitmap(cachedThumb)
-        }
+        Glide
+            .with(itemView.context)
+            .applyDefaultRequestOptions(requestOptions)
+            .load(thumb)
+            .into(thumbnail)
 
         this.itemView.image_thumbnail.clipToOutline = true
     }

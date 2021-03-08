@@ -12,7 +12,6 @@ class Rule34xxxParser() : Parser() {
     private val idsPerPage = 42
 
     override fun getTags(search: String): List<String> {
-        // TODO print lable but insert value in search field
         val url = buildUrl("autocomplete.php", mapOf("q" to search))
         val resp = get(url).jsonArray
 
@@ -80,7 +79,13 @@ class Rule34xxxParser() : Parser() {
         resp.select("ul#tag-sidebar a").forEach {
             tags.add(it.text().replace(Regex(" "), "_"))
         }
-        imageItem.full = resp.select("#image").attr("src").toString()
         imageItem.tags = tags
+
+        val video = resp.select("video")
+        imageItem.full = if (video != null) {
+            video.select("source").attr("src")
+        } else {
+             resp.select("#image").attr("src").toString()
+        }
     }
 }

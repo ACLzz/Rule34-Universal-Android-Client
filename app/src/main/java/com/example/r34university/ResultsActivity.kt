@@ -62,8 +62,6 @@ fun Context.hideKeyboard(view: View) {
 }
 
 class ResultsActivity : AppCompatActivity(), Communicator {
-    // TODO bottom bar with page navigation
-    // TODO videos support
     private lateinit var binding: ResultsActivityBinding
 
     private val items = ArrayList<ImageItem>()

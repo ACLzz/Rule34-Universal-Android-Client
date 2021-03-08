@@ -13,6 +13,10 @@ import android.widget.MultiAutoCompleteTextView.Tokenizer
 import androidx.fragment.app.Fragment
 import com.example.r34university.databinding.SearchFragmentBinding
 import kotlinx.android.synthetic.main.search_fragment.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import parsers.ContentParser
 import kotlin.concurrent.thread
 
@@ -201,11 +205,14 @@ class MyWatcher(private val getTags: () -> Unit, private val updateTags: () -> U
     }
 
     private fun newTags() {
-        // TODO async
-        thread {
-            getTags()
-        }.join()
-        updateTags()
+        GlobalScope.launch {
+            suspend {
+                getTags()
+                withContext(Dispatchers.Main) {
+                    updateTags()
+                }
+            }.invoke()
+        }
     }
 
 }

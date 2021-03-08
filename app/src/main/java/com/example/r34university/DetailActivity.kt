@@ -54,7 +54,6 @@ class DetailActivity: AppCompatActivity(), Communicator {
             ContextCompat.getColor(applicationContext, R.color.orangeTagColor),
         )
 
-        // FIXME recyclerview not resizing and scrolling when it mustn't
         val lm = FlexboxLayoutManager(FlexDirection.ROW)
         lm.flexWrap = FlexWrap.WRAP
         lm.alignItems = AlignItems.STRETCH
