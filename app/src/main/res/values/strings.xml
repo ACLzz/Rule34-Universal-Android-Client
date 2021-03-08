@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">R34 University</string>
+    <string name="app_name">R34 Universe</string>
     <string-array name="parsers_array">
         <item>rule34.xxx</item>
         <item>rule34.paheal.net</item>
