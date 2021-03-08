@@ -119,7 +119,7 @@ class DetailActivity: AppCompatActivity(), Communicator {
         hideTags()
 
         val requestOptions = RequestOptions()
-            .placeholder(R.drawable.ic_launcher_foreground)
+            .placeholder(R.drawable.ic_loading)
             .error(R.drawable.ic_default_image_item)
 
         Glide

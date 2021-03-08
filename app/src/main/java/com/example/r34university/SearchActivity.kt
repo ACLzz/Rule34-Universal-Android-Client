@@ -41,8 +41,6 @@ class SearchActivity : AppCompatActivity(), Communicator {
         ).also { adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             binding.parserSpinner.adapter = adapter
-            val a = ConfigRepo.source.toSiteLink()
-            val b = adapter.getPosition(a)
             binding.parserSpinner.setSelection(adapter.getPosition(ConfigRepo.source.toSiteLink()))
         }
 
@@ -56,7 +54,6 @@ class SearchActivity : AppCompatActivity(), Communicator {
 
 class ParserSelect : AdapterView.OnItemSelectedListener {
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        val a = toSiteObj(parent?.getItemAtPosition(position).toString())
         ConfigRepo.source = toSiteObj(parent?.getItemAtPosition(position).toString())
     }
 
