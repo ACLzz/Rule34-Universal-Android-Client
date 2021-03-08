@@ -1,14 +1,19 @@
 package com.example.r34university
 
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.example.r34university.databinding.SearchActivityBinding
+import kotlinx.android.synthetic.main.search_fragment.*
+import parsers.ContentParser
+import java.util.ArrayList
 
 class SearchActivity : AppCompatActivity(), Communicator {
     private lateinit var binding: SearchActivityBinding
@@ -23,15 +28,20 @@ class SearchActivity : AppCompatActivity(), Communicator {
         setContentView(binding.root)
 
         binding.postsLabel.setOnClickListener {
-            // TODO
+            val i = Intent(this, ResultsActivity::class.java).apply {
+                putParcelableArrayListExtra("posts", ContentParser.getAllPosts() as ArrayList<ImageItem>)
+                putExtra("pageCount", ContentParser.getAllPostsPagesCount())
+            }
+            startActivity(i)
         }
 
         binding.tagsLabel.setOnClickListener {
             // TODO
         }
 
-        binding.settingsLabel.setOnClickListener {
-            // TODO
+        binding.aboutLabel.setOnClickListener {
+            val i = Intent(this, AboutActivity::class.java)
+            startActivity(i)
         }
 
         ArrayAdapter.createFromResource(

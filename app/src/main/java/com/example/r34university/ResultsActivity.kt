@@ -90,8 +90,18 @@ class ResultsActivity : AppCompatActivity(), Communicator {
         }
 
         val searchRequest = intent.getStringExtra("search")
-        forceSearch(searchRequest!!)
-        searchStack.add(searchRequest)
+        searchRequest?.let {
+            forceSearch(searchRequest)
+            searchStack.add(searchRequest)
+        }
+
+        val searchResults = intent.getParcelableArrayListExtra<ImageItem>("posts")
+        searchResults?.let {
+            passSearchResults(searchResults)
+        }
+
+        val pagesCount = intent.getIntExtra("pageCount", 1)
+        passPagesCount(pagesCount)
     }
 
     private fun forceSearch(searchRequest: String) {

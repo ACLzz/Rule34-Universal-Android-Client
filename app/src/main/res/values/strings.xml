@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">R34 Universe</string>
+    <string name="app_version">0.9.0</string>
+    <string name="project_link">Not posted on github yet</string>
+    <string name="author">Amber Claes</string>
     <string-array name="parsers_array">
         <item>rule34.xxx</item>
         <item>rule34.paheal.net</item>

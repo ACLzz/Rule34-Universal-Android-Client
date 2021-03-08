@@ -50,11 +50,11 @@
             android:textColor="@color/colorAccent" />
 
         <TextView
-            android:id="@+id/settings_label"
+            android:id="@+id/about_label"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Settings"
+            android:text="About"
             android:textAlignment="center"
             android:textColor="@color/colorAccent" />
     </LinearLayout>

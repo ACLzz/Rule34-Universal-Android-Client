@@ -17,6 +17,10 @@ open class Parser {
     }
     open fun getPagesCount(search: String): Int = 1                                          // Returns count of pages for search
     open fun getDetails(imageItem: ImageItem) {}                                             // Updates image item fullLink, detailsLink and tagsList
+    open fun getAllPosts(): List<ImageItem> {                                                // Returns all new posts
+        return listOf()
+    }
+    open fun getAllPostsPagesCount(): Int = 1
 
     fun buildUrl(path: String, args: Map<String, String> = mapOf(), useBaseLink: Boolean = true) : String {
         var url = if (useBaseLink) baseLink + path else path

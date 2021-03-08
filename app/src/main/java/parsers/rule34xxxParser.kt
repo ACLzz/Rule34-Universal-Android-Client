@@ -51,6 +51,10 @@ class Rule34xxxParser() : Parser() {
         return imageItems
     }
 
+    override fun getAllPosts(): List<ImageItem> = search("all")
+
+    override fun getAllPostsPagesCount(): Int = getPagesCount("all")
+
     override fun getPagesCount(search: String): Int {
         val resp = getHtml("index.php", mapOf(
             "page" to "post",
