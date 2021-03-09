@@ -34,6 +34,15 @@ object ConfigRepo {
             }
         }
 
+    var defaultTags: String?
+    get() = perfs.getString("default_tags", "")
+    set(value) {
+        with (perfs.edit()) {
+            putString("default_tags", value)
+            commit()
+        }
+    }
+
     val useAutocompleteLoader: Boolean get() {              // search for tags on search field update
         return when (source) {
             ContentSource.Rule34xxx -> true

@@ -21,7 +21,6 @@ class TagsSearchFragment() : Fragment() {
     private var _binding: TagsSearchFragmentBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var communicator: Communicator
     private lateinit var searchField: MultiAutoCompleteTextView
     private lateinit var tags: List<String>
     private lateinit var tagsAdapter: ArrayAdapter<String>
@@ -38,7 +37,6 @@ class TagsSearchFragment() : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        communicator = activity as Communicator
 
         searchField = binding.tagsField
         if (!ConfigRepo.useAutocompleteLoader) {

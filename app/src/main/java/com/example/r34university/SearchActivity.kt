@@ -36,7 +36,8 @@ class SearchActivity : AppCompatActivity(), Communicator {
         }
 
         binding.tagsLabel.setOnClickListener {
-            // TODO
+            val i = Intent(this, DefaultTagsActivity::class.java)
+            startActivity(i)
         }
 
         binding.aboutLabel.setOnClickListener {

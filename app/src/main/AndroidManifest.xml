@@ -19,10 +19,11 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".SearchActivity"></activity>
-        <activity android:name=".DetailActivity"></activity>
-        <activity android:name=".ResultsActivity"></activity>
-        <activity android:name=".AboutActivity"></activity>
+        <activity android:name=".SearchActivity" />
+        <activity android:name=".DetailActivity" />
+        <activity android:name=".ResultsActivity" />
+        <activity android:name=".AboutActivity" />
+        <activity android:name=".DefaultTagsActivity" />
     </application>
 
 </manifest>

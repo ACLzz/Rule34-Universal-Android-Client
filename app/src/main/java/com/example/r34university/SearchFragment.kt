@@ -77,8 +77,9 @@ class SearchFragment : Fragment() {
             return
         }
 
-        val items = ContentParser.search(searchRequest)
-        val pageCount = ContentParser.getPagesCount(searchRequest)
+        val modifiedSearchRequest = searchRequest + " " + ConfigRepo.defaultTags
+        val items = ContentParser.search(modifiedSearchRequest)
+        val pageCount = ContentParser.getPagesCount(modifiedSearchRequest)
 
         communicator.passSearchResults(items)
         communicator.passPagesCount(pageCount)

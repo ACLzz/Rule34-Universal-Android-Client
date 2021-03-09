@@ -3,6 +3,11 @@
     <string name="app_version">0.9.0</string>
     <string name="project_link">Not posted on github yet</string>
     <string name="author">Amber Claes</string>
+    <string name="default_tags_description">
+        This tags will be added to all your requests. For example if default tags is: "-futanari -pregnant",
+        then when I will search for "female", it won\'t show me futanari and pregnant.\n
+        Don\'t forget to press enter after editing field to save tags.
+    </string>
     <string-array name="parsers_array">
         <item>rule34.xxx</item>
         <item>rule34.paheal.net</item>
