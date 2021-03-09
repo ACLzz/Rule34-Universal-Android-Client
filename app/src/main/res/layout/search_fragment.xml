@@ -8,23 +8,23 @@
     android:focusable="true"
     android:background="@drawable/search_fragment_shape">
 
-    <MultiAutoCompleteTextView
-        android:id="@+id/search_field"
+    <fragment
+        android:id="@+id/tags_search_fragment"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:textColor="@color/colorForeground"
         android:focusableInTouchMode="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/search_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="LabelFor" />
+        tools:ignore="LabelFor"
+        android:name="com.example.r34university.TagsSearchFragment"
+        tools:layout="@layout/tags_search_fragment"
+        android:tag="tags_search_fragment_fragment"/>
 
     <Button
         android:id="@+id/search_button"

@@ -7,12 +7,13 @@ import android.os.Bundle
 import android.os.Parcel
 import android.os.Parcelable
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.MultiAutoCompleteTextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.r34university.databinding.ResultsActivityBinding
 import com.google.android.flexbox.*
 import kotlinx.android.synthetic.main.search_fragment.*
+import kotlinx.android.synthetic.main.tags_search_fragment.*
 import java.util.*
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.collections.ArrayList
@@ -67,7 +68,8 @@ class ResultsActivity : AppCompatActivity(), Communicator {
     private val items = ArrayList<ImageItem>()
     private var searchStack = Stack<String>()
     private val forceSearchLock = ReentrantLock()
-    private val searchFragmentObj get() = supportFragmentManager.findFragmentById(R.id.results_search_fragment)!! as SearchFragment
+    private lateinit var searchFragmentObj: SearchFragment
+    private lateinit var tagsSearchField: MultiAutoCompleteTextView
     private lateinit var customAdapter: ImageAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,6 +79,8 @@ class ResultsActivity : AppCompatActivity(), Communicator {
 
         binding = ResultsActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        searchFragmentObj = supportFragmentManager.findFragmentById(R.id.results_search_fragment)!! as SearchFragment
+        tagsSearchField = searchFragmentObj.tagsSearchFragment.tags_field
 
         val lm = FlexboxLayoutManager(FlexDirection.ROW)
         lm.flexWrap = FlexWrap.WRAP
@@ -106,11 +110,10 @@ class ResultsActivity : AppCompatActivity(), Communicator {
     }
 
     private fun forceSearch(searchRequest: String) {
-        val searchFragment = searchFragmentObj
-        searchFragment.search_field.setText(searchRequest)
+        tagsSearchField.setText(searchRequest)
         try {
             forceSearchLock.lock()
-            searchFragment.search()
+            searchFragmentObj.search()
         } finally {
             forceSearchLock.unlock()
         }
@@ -130,7 +133,7 @@ class ResultsActivity : AppCompatActivity(), Communicator {
 
     override fun passSearchResults(results: List<ImageItem>) {
         if (!forceSearchLock.isLocked) {
-            searchStack.add(searchFragmentObj.search_field.text.toString())
+            searchStack.add(tagsSearchField.text.toString())
         }
 
         items.clear()
@@ -149,7 +152,7 @@ class ResultsActivity : AppCompatActivity(), Communicator {
     override fun onBackPressed() {
         if (!searchStack.empty()) {
             val prevSearch = searchStack.pop()
-            val currentSearch = searchFragmentObj.search_field.text.toString()
+            val currentSearch = tagsSearchField.text.toString()
             if (prevSearch != currentSearch) {
                 forceSearch(prevSearch)
                 return
