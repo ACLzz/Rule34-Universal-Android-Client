@@ -29,6 +29,7 @@ class SearchFragment : Fragment() {
     private lateinit var searchField: MultiAutoCompleteTextView
     private lateinit var tags: List<String>
     private lateinit var tagsAdapter: ArrayAdapter<String>
+    private val spaceTokenizer = SpaceTokenizer()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -71,7 +72,7 @@ class SearchFragment : Fragment() {
             tags
         )
         searchField.setAdapter(tagsAdapter)
-        searchField.setTokenizer(SpaceTokenizer())
+        searchField.setTokenizer(spaceTokenizer)
     }
 
     fun hideKeyboard() {
@@ -113,8 +114,9 @@ class SearchFragment : Fragment() {
         val adapter = searchField.adapter as ArrayAdapter<String>
         adapter.clear()
         tags.forEach { adapter.add(it) }
+        val text = searchField.text.split(" ").last().replace(Regex("-"), "")
 
-        adapter.filter.filter(searchField.text, null)
+        adapter.filter.filter(text, null)
     }
 
     override fun onDestroyView() {
@@ -181,7 +183,7 @@ class SpaceTokenizer : Tokenizer {
         }
     }
 
-    private fun formatText(text: CharSequence) = text.replace(Regex("-"), " ") as CharSequence
+    fun formatText(text: CharSequence) = text.replace(Regex("-"), " ") as CharSequence
 }
 
 class MyWatcher(private val getTags: () -> Unit, private val updateTags: () -> Unit): TextWatcher {
