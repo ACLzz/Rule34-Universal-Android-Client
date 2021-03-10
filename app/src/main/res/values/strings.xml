@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">R34 Universe</string>
-    <string name="app_version">0.9.0</string>
-    <string name="project_link">Not posted on github yet</string>
+    <string name="app_version">1.0.0</string>
+    <string name="project_link">ACLzz/Rule34-Universal-Android-Client</string>
     <string name="author">Amber Claes</string>
     <string name="default_tags_description">
         This tags will be added to all your requests. For example if default tags is: "-futanari -pregnant",

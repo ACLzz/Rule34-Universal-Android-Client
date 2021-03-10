@@ -1,10 +1,8 @@
 package com.example.r34university
 
-import android.Manifest
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -18,13 +16,10 @@ import kotlin.concurrent.thread
 
 @RequiresApi(Build.VERSION_CODES.R)
 class MainActivity : AppCompatActivity() {
-    private val permissions = arrayOf(
-        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+    private val permissions = arrayOf<String>(
+        //
     )
-    private val permissionsDetails = arrayOf(
-        mapOf(
-            "name" to "write storage",
-            "description" to "download images to your phone")
+    private val permissionsDetails = arrayOf<Map<String, String>>(
     )
 
     private var checkedPermissions = 0
