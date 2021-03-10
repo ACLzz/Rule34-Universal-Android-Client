@@ -7,11 +7,11 @@ import kotlin.concurrent.thread
 import org.jsoup.nodes.Document
 
 open class Parser {
-    open val baseLink: String = "https://example.com"
-    open var currentSearch: String = ""
+    open val baseLink: String = "https://example.com"                                        // YOU NEED TO OVERWRITE THIS
+    open var currentSearch: String = ""                                                      // YOU NEED TO OVERWRITE THIS
 
     open fun getTags(search: String): List<String> = listOf<String>()                        // Returns list of available tags for search text
-    open fun search(search: String = currentSearch, page: Int = 0): List<ImageItem> {        // Returns list of image items that was found by search text
+    open fun search(search: String = currentSearch, page: Int = 1): List<ImageItem> {        // Returns list of image items that was found by search text
         currentSearch = search
         return listOf<ImageItem>()
     }
@@ -53,6 +53,11 @@ open class Parser {
     }
 }
 
-val ContentParser = when (ConfigRepo) {
+val ContentParser get() = when (ConfigRepo.source) {
+    "rule34.xxx" -> rule34xxxParser
+    "rule34.paheal.net" -> rule34PahealNetParser
     else -> Rule34xxxParser()
-} as Parser
+}
+
+private val rule34xxxParser = Rule34xxxParser()
+private val rule34PahealNetParser = Rule34PahealNetParser()

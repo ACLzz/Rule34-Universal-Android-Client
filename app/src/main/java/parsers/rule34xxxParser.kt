@@ -26,6 +26,7 @@ class Rule34xxxParser() : Parser() {
 
     override fun search(search: String, page: Int): List<ImageItem> {
         super.search(search, page)
+        currentSearch = search
 
         val urlParams = mutableMapOf(
             "page" to "post",

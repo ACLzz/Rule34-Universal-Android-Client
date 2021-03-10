@@ -52,7 +52,7 @@ class SearchActivity : AppCompatActivity(), Communicator {
         ).also { adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             binding.parserSpinner.adapter = adapter
-            binding.parserSpinner.setSelection(adapter.getPosition(ConfigRepo.source.toSiteLink()))
+            binding.parserSpinner.setSelection(adapter.getPosition(ConfigRepo.source))
         }
 
         binding.parserSpinner.onItemSelectedListener = ParserSelect()
@@ -65,7 +65,7 @@ class SearchActivity : AppCompatActivity(), Communicator {
 
 class ParserSelect : AdapterView.OnItemSelectedListener {
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        ConfigRepo.source = toSiteObj(parent?.getItemAtPosition(position).toString())
+        ConfigRepo.source = parent?.getItemAtPosition(position).toString()
     }
 
     override fun onNothingSelected(parent: AdapterView<*>?) {}

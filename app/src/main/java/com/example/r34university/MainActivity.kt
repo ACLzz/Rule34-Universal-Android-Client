@@ -36,6 +36,7 @@ class MainActivity : AppCompatActivity() {
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         ConfigRepo.perfs = getSharedPreferences(cfgFileName, Context.MODE_PRIVATE)
+        ConfigRepo.parsersWithSuggestionsLoaderArray = resources.getStringArray(R.array.parsers_with_suggestions_loader_array)
 
         thread {
             checkPermissions()

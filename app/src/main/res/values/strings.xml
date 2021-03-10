@@ -13,4 +13,9 @@
         <item>rule34.paheal.net</item>
     </string-array>
 
+    <string-array name="parsers_with_suggestions_loader_array">
+        <item>rule34.xxx</item>
+        <item>rule34.paheal.net</item>
+    </string-array>
+
 </resources>
