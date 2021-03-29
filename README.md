@@ -2,10 +2,6 @@
 ## What is it?
 It is universal android client for rule34 web sites.<br/>
 For truth, you can write additional parsers not only to rule34 sites, but also to something like e621.net. 
-<br/>For more info click # Rule 34 Universe
-## What is it?
-It is universal android client for rule34 web sites.<br/>
-For truth, you can write additional parsers not only to rule34 sites, but also to something like e621.net. 
 <br/>For more info click [here](https://github.com/ACLzz/Rule34-Universal-Android-Client/blob/main/README.md#Parser).
 
 ## Advantages
