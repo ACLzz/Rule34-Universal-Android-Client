@@ -5,6 +5,7 @@ import com.example.r34university.ImageItem
 import org.jsoup.helper.HttpConnection
 import kotlin.concurrent.thread
 import org.jsoup.nodes.Document
+import org.jsoup.HttpStatusException
 
 open class Parser {
     open val baseLink: String = "https://example.com"                                        // YOU NEED TO OVERWRITE THIS
@@ -47,7 +48,11 @@ open class Parser {
         val url = buildUrl(path, args, baseLink)
         var resp: Document = Document("")
         thread {
-            resp = HttpConnection.connect(url).get()
+            try {
+                resp = HttpConnection.connect(url).get()        // FIXME 404 error
+            } catch (e: HttpStatusException) {
+                println("Http exception status code: " + e.statusCode.toString())
+            }
         }.join()
         return resp
     }

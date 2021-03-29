@@ -2,6 +2,10 @@ package parsers
 
 import com.example.r34university.ImageItem
 import khttp.get
+import org.json.JSONException
+import org.json.JSONObject
+import java.lang.Error
+import java.lang.NullPointerException
 
 class Rule34PahealNetParser() : Parser() {
     override var currentSearch: String = ""
@@ -13,7 +17,11 @@ class Rule34PahealNetParser() : Parser() {
             return tags
 
         val url = buildUrl("api/internal/autocomplete", mapOf("s" to search))
-        val resp = get(url).jsonObject
+        val resp = try {
+            get(url).jsonObject
+        } catch (e: JSONException) {
+            JSONObject()
+        }
 
         for (key in resp.keys()) {
             tags.add(key)
@@ -49,11 +57,13 @@ class Rule34PahealNetParser() : Parser() {
     }
 
     override fun getPagesCount(search: String): Int {
-        // FIXME
         val modifiedSearch = formatSearch(search)
         val resp = getHtml("post/list/${if (search.isNotEmpty()) "$modifiedSearch/" else ""}/1")
-        val count = resp.selectFirst("#paginator > div:nth-child(1) > a:nth-child(3)").attr("href").split("/").last().toInt()
-        return count.toInt()
+        return try {
+            resp.selectFirst("#paginator > div:nth-child(1) > a:nth-child(3)").attr("href").split("/").last().toInt()
+        } catch (e: NullPointerException) {
+            0
+        }
     }
 
     override fun getDetails(imageItem: ImageItem) {
