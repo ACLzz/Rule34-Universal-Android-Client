@@ -136,6 +136,7 @@ class DetailActivity: AppCompatActivity(), Communicator {
         // starting new activity and passing search request
         val i = Intent(this, ResultsActivity::class.java).apply {
             putExtra("search", tag)
+            putExtra("prevSearch", ContentParser.currentSearch)
         }
         startActivity(i)
     }

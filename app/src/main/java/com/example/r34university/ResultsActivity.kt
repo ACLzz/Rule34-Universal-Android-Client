@@ -14,6 +14,7 @@ import com.example.r34university.databinding.ResultsActivityBinding
 import com.google.android.flexbox.*
 import kotlinx.android.synthetic.main.search_fragment.*
 import kotlinx.android.synthetic.main.tags_search_fragment.*
+import parsers.ContentParser
 import java.util.*
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.collections.ArrayList
@@ -64,6 +65,7 @@ fun Context.hideKeyboard(view: View) {
 
 class ResultsActivity : AppCompatActivity(), Communicator {
     private lateinit var binding: ResultsActivityBinding
+    private var prevSearch = ""
 
     private val items = ArrayList<ImageItem>()
     private var searchStack = Stack<String>()
@@ -97,6 +99,11 @@ class ResultsActivity : AppCompatActivity(), Communicator {
         searchRequest?.let {
             forceSearch(searchRequest)
             searchStack.add(searchRequest)
+        }
+
+        val prevSearchRequest = intent.getStringExtra("prevSearch")
+        prevSearchRequest?.let {
+            prevSearch = prevSearchRequest
         }
 
         val searchResults = intent.getParcelableArrayListExtra<ImageItem>("posts")
@@ -159,8 +166,12 @@ class ResultsActivity : AppCompatActivity(), Communicator {
             }
         }
 
-        if (searchStack.empty())
+        if (searchStack.empty()) {
             super.onBackPressed()
+            if (prevSearch != "") {
+                ContentParser.currentSearch = prevSearch
+            }
+        }
         else
             onBackPressed()
     }
