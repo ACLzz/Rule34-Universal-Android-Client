@@ -4,12 +4,14 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.view.GestureDetector
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
-import androidx.annotation.UiThread
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.GestureDetectorCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.r34university.databinding.DetailActivityBinding
@@ -18,12 +20,17 @@ import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
 import parsers.ContentParser
+import kotlin.math.abs
 
-class DetailActivity: AppCompatActivity(), Communicator {
+const val SWIPE_THRESHOLD = 120
+const val SWIPE_VELOCITY_THRESHOLD = 120
+
+class DetailActivity: AppCompatActivity(), Communicator, GestureDetector.OnGestureListener{
     private lateinit var binding: DetailActivityBinding
     private lateinit var items: ArrayList<ImageItem>
     private lateinit var customTagsAdapter: TagsListAdapter
     private lateinit var communicator: Communicator
+    private lateinit var mDetector: GestureDetectorCompat
 
     private var currentPos = 0
     private val currentImage: ImageItem get() = items[currentPos]
@@ -74,8 +81,48 @@ class DetailActivity: AppCompatActivity(), Communicator {
         binding.tagsLayout.setOnClickListener { hideTags() }
         binding.tagsPlaceholder.setOnClickListener { if (binding.tagsLayout.visibility == ViewGroup.VISIBLE) hideTags() else showTags() }
         binding.tagsViewToggler.setOnClickListener { showTags() }
+        mDetector = GestureDetectorCompat(this, this)
 
         showImage()
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        return if (mDetector.onTouchEvent(ev)) {
+            true
+        } else {
+            super.dispatchTouchEvent(ev)
+        }
+    }
+
+    override fun onLongPress(event: MotionEvent) {}
+    override fun onDown(event: MotionEvent): Boolean { return false }
+    override fun onShowPress(event: MotionEvent) {}
+    override fun onScroll(event1: MotionEvent, event2: MotionEvent, distanceX: Float, distanceY: Float): Boolean { return false }
+    override fun onSingleTapUp(event: MotionEvent): Boolean { return false }
+    override fun onFling(
+        e1: MotionEvent,
+        e2: MotionEvent,
+        velocityX: Float,
+        velocityY: Float
+    ): Boolean {
+        var result = false
+        try {
+            val diffY = e2.y - e1.y
+            val diffX = e2.x - e1.x
+            if (abs(diffX) > abs(diffY)) {
+                if (abs(diffX) > SWIPE_THRESHOLD && abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                    if (diffX > 0) {
+                        goPrevImage()
+                    } else {
+                        goNextImage()
+                    }
+                    result = true
+                }
+            }
+        } catch (exception: Exception) {
+            exception.printStackTrace()
+        }
+        return result
     }
 
     private fun goNextImage() {

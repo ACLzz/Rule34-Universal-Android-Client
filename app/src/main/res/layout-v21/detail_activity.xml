@@ -18,6 +18,7 @@
         app:srcCompat="@drawable/ic_default_image_item" />
 
     <LinearLayout
+        android:id="@+id/control_layout"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="200dp"
@@ -41,6 +42,7 @@
             android:layout_height="match_parent"
             android:layout_weight="2"
             android:background="@color/alpha" />
+
         <View
             android:id="@+id/next_button"
             android:layout_width="1dp"
