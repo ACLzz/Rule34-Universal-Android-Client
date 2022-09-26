@@ -12,12 +12,10 @@ import android.widget.MultiAutoCompleteTextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.r34university.databinding.ResultsActivityBinding
 import com.google.android.flexbox.*
-import kotlinx.android.synthetic.main.search_fragment.*
 import kotlinx.android.synthetic.main.tags_search_fragment.*
 import parsers.ContentParser
 import java.util.*
 import java.util.concurrent.locks.ReentrantLock
-import kotlin.collections.ArrayList
 
 
 class ImageItem(

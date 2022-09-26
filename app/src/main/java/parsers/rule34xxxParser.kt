@@ -82,7 +82,10 @@ class Rule34xxxParser() : Parser() {
 
         val tags = arrayListOf<String>()
         resp.select("ul#tag-sidebar a").forEach {
-            tags.add(it.text().replace(Regex(" "), "_"))
+            // filter out wiki links
+            if ("page=wiki"  !in it.attr("href")) {
+                tags.add(it.text().replace(Regex(" "), "_"))
+            }
         }
         imageItem.tags = tags
 
