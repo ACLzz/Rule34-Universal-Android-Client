@@ -17,6 +17,12 @@ For truth, you can write additional parsers not only to rule34 sites, but also t
 - Not supporting videos (GIFs works good)
 - Not resizing image
 
+## Screenshots
+<img src="./screenshots/main.jpg" width="50%"/>
+<img src="./screenshots/tags.jpg" width="49%"/><br/>
+<img src="./screenshots/images.jpg"/ width="50%">
+<img src="./screenshots/detailed_image.jpg"/ width="49%">
+
 ## What have I used
 - Android fragments
 - DataBinding
