@@ -7,9 +7,10 @@ import org.json.JSONObject
 class Rule34xxxParser() : Parser() {
     override var currentSearch: String = ""
     override val baseLink = "https://rule34.xxx/"
-    private val maximumId = 200000      // rule34.xxx has dumb pid argument bound
+    private val maximumId = "200000"      // rule34.xxx has dumb pid argument bound
     private val maximumPage = 4762
     private val idsPerPage = 42
+    private val videoStyle = "border: 3px solid #0000ff;"
 
     override fun getTags(search: String): List<String> {
         val url = buildUrl("autocomplete.php", mapOf("q" to search))
@@ -42,10 +43,13 @@ class Rule34xxxParser() : Parser() {
         val imageItems = arrayListOf<ImageItem>()
         imageTags?.let {
             imageTags.forEach {
-                val details = it.select("a").attr("href")
-                val thumb = it.select("img").attr("src")
-                val item = ImageItem(thumb, details, "")
-                imageItems.add(item)
+                // filter videos because glide cannot play them
+                if (it.select("img").attr("style") != videoStyle) {
+                    val details = it.select("a").attr("href")
+                    val thumb = it.select("img").attr("src")
+                    val item = ImageItem(thumb, details, "")
+                    imageItems.add(item)
+                }
             }
         }
 
@@ -61,7 +65,7 @@ class Rule34xxxParser() : Parser() {
             "page" to "post",
             "s" to "list",
             "tags" to search,
-            "pid" to "200000",
+            "pid" to maximumId,
         ))
 
         val pageBar = resp.select("#paginator")

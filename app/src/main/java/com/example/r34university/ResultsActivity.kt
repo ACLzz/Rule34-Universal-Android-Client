@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.tags_search_fragment.*
 import parsers.ContentParser
 import java.util.*
 import java.util.concurrent.locks.ReentrantLock
+import kotlin.collections.ArrayList
 
 
 class ImageItem(

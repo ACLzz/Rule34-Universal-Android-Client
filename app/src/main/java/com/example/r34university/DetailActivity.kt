@@ -19,7 +19,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.GestureDetectorCompat
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.bumptech.glide.request.RequestOptions
 import com.example.r34university.databinding.DetailActivityBinding
 import com.google.android.flexbox.AlignItems
@@ -138,14 +140,21 @@ class DetailActivity: AppCompatActivity(), Communicator, GestureDetector.OnGestu
 
         hideTags()
 
+        val circularProgressDrawable = CircularProgressDrawable(this)
+        circularProgressDrawable.strokeWidth = 5f
+        circularProgressDrawable.centerRadius = 30f
+        circularProgressDrawable.setColorSchemeColors(ContextCompat.getColor(applicationContext, R.color.fullWhite))
+        circularProgressDrawable.start()
+
         val requestOptions = RequestOptions()
-            .placeholder(R.drawable.ic_loading)
+            .placeholder(circularProgressDrawable)
             .error(R.drawable.ic_default_image_item)
 
         Glide
             .with(applicationContext)
             .applyDefaultRequestOptions(requestOptions)
             .load(currentImage.full)
+            .transition(withCrossFade())
             .into(binding.fullImageView)
     }
 

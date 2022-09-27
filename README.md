@@ -11,11 +11,11 @@ For truth, you can write additional parsers not only to rule34 sites, but also t
 - No trackers
 - Open source
 - Default tags feature (checkout "tags" section on main menu)
+- You can download images to gallery
 
 ## Disadvantages
 - Not supporting videos (GIFs works good)
 - Not resizing image
-- Not able to download images
 
 ## What have I used
 - Android fragments
