@@ -4,23 +4,30 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.view.GestureDetector
 import android.view.MotionEvent
+import android.view.ScaleGestureDetector
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintSet.Motion
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.GestureDetectorCompat
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import com.bumptech.glide.load.resource.bitmap.FitCenter
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.bumptech.glide.request.RequestOptions
 import com.example.r34university.databinding.DetailActivityBinding
@@ -32,23 +39,53 @@ import parsers.ContentParser
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
+import java.security.Timestamp
+import java.sql.Time
+import java.time.LocalDate
+import java.time.temporal.TemporalAmount
+import java.time.temporal.TemporalUnit
+import java.util.Calendar
+import java.util.TimeZone
+import java.util.Timer
 import kotlin.math.abs
+import kotlin.time.Duration
+import kotlin.time.ExperimentalTime
+import kotlin.time.TimeMark
+import kotlin.time.TimeSource
+import kotlin.time.seconds
 
 
 const val SWIPE_THRESHOLD = 120
 const val SWIPE_VELOCITY_THRESHOLD = 120
+const val DEFAULT_SCALE_FACTOR = 1f
+const val MIN_SCALE_FACTOR = 1f
+const val MAX_SCALE_FACTOR = 5f
 
-class DetailActivity: AppCompatActivity(), Communicator, GestureDetector.OnGestureListener{
+
+@OptIn(ExperimentalTime::class)
+class DetailActivity: AppCompatActivity(), Communicator, GestureDetector.OnGestureListener, ScaleGestureDetector.OnScaleGestureListener{
     private lateinit var binding: DetailActivityBinding
     private lateinit var items: ArrayList<ImageItem>
     private lateinit var customTagsAdapter: TagsListAdapter
     private lateinit var communicator: Communicator
-    private lateinit var mDetector: GestureDetectorCompat
+    private lateinit var mGestureDetector: GestureDetectorCompat
+    private lateinit var mScaleDetector: ScaleGestureDetector
+
+    private var lastPositionX: Float = 0f
+    private var lastPositionY: Float = 0f
+    private var lastScaleFactor: Float = DEFAULT_SCALE_FACTOR
+    private var isScalerActive: Boolean = false
+    private var clock: TimeSource = TimeSource.Monotonic
+    private var lastScalerActiveDate: TimeMark = clock.markNow()
 
     private var currentPos = 0
     private val currentImage: ImageItem get() = items[currentPos]
     private var tagsList = listOf<String>()
     private lateinit var tagsColorList: List<Int>
+
+    private fun canAcceptEventsAfterScalerDeactivation(): Boolean {
+        return lastScalerActiveDate.hasPassedNow()
+    }
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,7 +111,7 @@ class DetailActivity: AppCompatActivity(), Communicator, GestureDetector.OnGestu
             ContextCompat.getColor(applicationContext, R.color.orangeTagColor),
         )
 
-        val lm = FlexboxLayoutManager(FlexDirection.ROW)
+        val lm = FlexboxLayoutManager(applicationContext, FlexDirection.ROW)
         lm.flexWrap = FlexWrap.WRAP
         lm.alignItems = AlignItems.STRETCH
 
@@ -93,9 +130,10 @@ class DetailActivity: AppCompatActivity(), Communicator, GestureDetector.OnGestu
 
         binding.tagsLayout.setOnClickListener { hideTags() }
         binding.tagsPlaceholder.setOnClickListener { if (binding.tagsLayout.visibility == ViewGroup.VISIBLE) hideTags() else showTags() }
-        binding.tagsViewToggler.setOnClickListener { showTags() }
+        binding.tagsViewToggler.setOnClickListener { showTags() } // TODO: maybe delete, review if it is still in use
         binding.downloadButton.setOnClickListener { downloadImage() }
-        mDetector = GestureDetectorCompat(this, this)
+        mGestureDetector = GestureDetectorCompat(this, this)
+        mScaleDetector = ScaleGestureDetector(this, this)
 
         showImage()
     }
@@ -140,11 +178,12 @@ class DetailActivity: AppCompatActivity(), Communicator, GestureDetector.OnGestu
 
         hideTags()
 
-        val circularProgressDrawable = CircularProgressDrawable(this)
-        circularProgressDrawable.strokeWidth = 5f
-        circularProgressDrawable.centerRadius = 30f
-        circularProgressDrawable.setColorSchemeColors(ContextCompat.getColor(applicationContext, R.color.fullWhite))
-        circularProgressDrawable.start()
+        val circularProgressDrawable = CircularProgressDrawable(this).apply {
+            this.strokeWidth = 5f
+            this.centerRadius = 30f
+            this.setColorSchemeColors(ContextCompat.getColor(applicationContext, R.color.fullWhite))
+            this.start()
+        }
 
         val requestOptions = RequestOptions()
             .placeholder(circularProgressDrawable)
@@ -210,12 +249,69 @@ class DetailActivity: AppCompatActivity(), Communicator, GestureDetector.OnGestu
 
     override fun passSearchResults(results: List<ImageItem>) {}
     override fun passPagesCount(count: Int) {}
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
-        return if (mDetector.onTouchEvent(ev)) {
-            true
-        } else {
-            super.dispatchTouchEvent(ev)
+        val isEventUsedByGD = (mGestureDetector.onTouchEvent(ev))
+        mScaleDetector.onTouchEvent(ev)
+        var isEventUsedByActivity = false
+
+        ev?.let {
+            val action = it.action
+
+            isEventUsedByActivity = when (action) {
+                MotionEvent.ACTION_MOVE -> {
+                        if (!isScalerActive) {
+                            return false
+                        }
+                        val dx = mScaleDetector.focusX - lastPositionX
+                        val dy = mScaleDetector.focusY - lastPositionY
+
+                        binding.fullImageView.x += dx
+                        binding.fullImageView.y += dy
+
+                        lastPositionX = mScaleDetector.focusX
+                        lastPositionY = mScaleDetector.focusY
+                        binding.fullImageView.invalidate()
+                        true
+                    }
+                    else -> false
+                }
         }
+
+        val isEventUsedByScaler = isScalerActive || !canAcceptEventsAfterScalerDeactivation()
+        return isEventUsedByGD || isEventUsedByScaler || isEventUsedByActivity || super.dispatchTouchEvent(ev)
+    }
+
+    override fun onScale(detector: ScaleGestureDetector): Boolean {
+        var scaleFactor = lastScaleFactor + detector.scaleFactor - DEFAULT_SCALE_FACTOR
+        scaleFactor = scaleFactor.coerceIn(MIN_SCALE_FACTOR, MAX_SCALE_FACTOR)
+        lastScaleFactor = scaleFactor
+
+        binding.fullImageView.scaleX = scaleFactor
+        binding.fullImageView.scaleY = scaleFactor
+        return true
+    }
+
+    override fun onScaleBegin(detector: ScaleGestureDetector): Boolean {
+        this.hideTags()
+        isScalerActive = true
+        lastPositionX = mScaleDetector.focusX
+        lastPositionY = mScaleDetector.focusY
+        return true
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onScaleEnd(p0: ScaleGestureDetector) {
+        isScalerActive = false
+        lastScalerActiveDate = clock.markNow() + 1.seconds
+        lastScaleFactor = DEFAULT_SCALE_FACTOR
+
+        binding.fullImageView.scaleX = DEFAULT_SCALE_FACTOR
+        binding.fullImageView.scaleY = DEFAULT_SCALE_FACTOR
+        binding.fullImageView.x = 0f
+        binding.fullImageView.y = 0f
+        lastPositionX = 0f
+        lastPositionY = 0f
     }
 
     override fun onLongPress(event: MotionEvent) {}
@@ -229,6 +325,10 @@ class DetailActivity: AppCompatActivity(), Communicator, GestureDetector.OnGestu
         velocityX: Float,
         velocityY: Float
     ): Boolean {
+        if (isScalerActive) {
+            return false
+        }
+
         var result = false
         try {
             val diffY = e2.y - e1.y

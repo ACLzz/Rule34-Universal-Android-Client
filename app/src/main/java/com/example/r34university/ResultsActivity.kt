@@ -83,7 +83,7 @@ class ResultsActivity : AppCompatActivity(), Communicator {
         searchFragmentObj = supportFragmentManager.findFragmentById(R.id.results_search_fragment)!! as SearchFragment
         tagsSearchField = searchFragmentObj.tagsSearchFragment.tags_field
 
-        val lm = FlexboxLayoutManager(FlexDirection.ROW)
+        val lm = FlexboxLayoutManager(baseContext, FlexDirection.ROW)
         lm.flexWrap = FlexWrap.WRAP
         lm.alignItems = AlignItems.CENTER
         lm.justifyContent = JustifyContent.SPACE_BETWEEN

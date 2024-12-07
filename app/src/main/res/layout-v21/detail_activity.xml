@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,7 +10,10 @@
         android:id="@+id/full_image_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:adjustViewBounds="false"
         android:contentDescription="nsfw image"
+        android:cropToPadding="false"
+        android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -53,59 +55,59 @@
             android:background="@color/alpha" />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/tags_layout"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:background="@drawable/tags_gradient"
+        android:clickable="false"
+        android:fadeScrollbars="false"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="visible">
+
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="200dp"
-            android:background="@drawable/tags_gradient"
-            android:clickable="false"
-            android:fadeScrollbars="false"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:visibility="visible"
-            android:id="@+id/tags_layout"
-            android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/tags_header"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_weight="1"
+                android:background="@color/alpha"
+                android:paddingStart="16dp"
+                android:text="Tags:"
+                android:textColor="@color/fullWhite"
+                android:textSize="20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/tags_header"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@color/alpha"
-                    android:paddingStart="16dp"
-                    android:text="Tags:"
-                    android:textColor="@color/fullWhite"
-                    android:textSize="20dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+            <Button
+                android:id="@+id/download_button"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:background="@drawable/ic_download"
+                android:contentDescription="download image"
+                tools:ignore="TouchTargetSizeCheck" />
 
-                <Button
-                    android:id="@+id/download_button"
-                    android:layout_width="38dp"
-                    android:layout_height="38dp"
-                    android:background="@drawable/ic_download"
-                    android:contentDescription="download image"
-                    tools:ignore="TouchTargetSizeCheck" />
-
-                <Space
-                    android:layout_width="15px"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/tags_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:overScrollMode="never" />
-
+            <Space
+                android:layout_width="15px"
+                android:layout_height="wrap_content" />
         </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/tags_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never" />
+
+    </LinearLayout>
 
     <View
         android:id="@+id/tags_view_toggler"
